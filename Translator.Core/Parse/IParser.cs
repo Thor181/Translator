@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Translator.Core.Parse.Tokens;
 
 namespace Translator.Core.Parse
 {
@@ -10,6 +11,6 @@ namespace Translator.Core.Parse
     {
         public ParseMode Mode { get; set; }
         public string Source { get; set; }
-        public string[] Parse();
+        public ReadOnlySpan<BaseToken> Parse();
     }
 }

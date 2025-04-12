@@ -7,7 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Translator.Core.Common;
 using Translator.Core.Models.Translate;
-using Translator.Core.Models.Translate.Api.Google;
+using Translator.Core.Models.Utils;
+using Translator.Core.Parse.Tokens;
+using Translator.Core.Translate.Api.Google.Models;
 using Translator.Core.Translate.Languages;
 
 namespace Translator.Core.Translate.Api.Google
@@ -20,7 +22,7 @@ namespace Translator.Core.Translate.Api.Google
         public Language SourceLanguage { get; set; } = Language.Auto;
         public required Language TargetLanguage { get; set; }
 
-        public Result<GoogleResponse> Translate(string text)
+        public Result<IResponse> Translate(string text)
         {
             var escapedText = Uri.EscapeDataString(text);
 
@@ -36,10 +38,10 @@ namespace Translator.Core.Translate.Api.Google
             GoogleApiResponse? apiResponse = success ? response.Content.ReadFromJson<GoogleApiResponse>() : null;
             GoogleResponse? body = success && apiResponse != null ? new GoogleResponse(apiResponse) : null;
 
-            return new Result<GoogleResponse>(success, message, body);
+            return new Result<IResponse>(success, message, body);
         }
 
-        public IEnumerable<Result<GoogleResponse>> Translate(params IEnumerable<string> texts)
+        public IEnumerable<Result<IResponse>> Translate(params IEnumerable<string> texts)
         {
             var index = 0;
             foreach (var text in texts)
@@ -48,6 +50,17 @@ namespace Translator.Core.Translate.Api.Google
                 yield return translation;
                 Progress?.Report(++index);   
             }
+        }
+
+        public IEnumerable<TranslationToken> Translate(params IEnumerable<SentenceToken> sentences)
+        {
+            var translations = Translate(sentences.Select(x => x.Content));
+
+            var errors = translations.Where(x => !x.Success).Select(x => x.Message).ToArray();
+            if (errors.Length > 0)
+                throw new InvalidOperationException("Errors occurred while trying to translate: " + Environment.NewLine + errors.JoinString(Environment.NewLine));
+
+            return translations.Select(x => new TranslationToken(x.Body.Translation, x.Body.Original));
         }
     }
 }

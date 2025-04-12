@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Translator.Core.Models.Translate;
+using Translator.Core.Parse.Tokens;
 
 namespace Translator.Core.Write.Docx
 {
@@ -27,7 +28,24 @@ namespace Translator.Core.Write.Docx
             }
 
             document.Save();
+        }
 
+        public void Write(params IEnumerable<BaseToken> tokens)
+        {
+            using var document = CreateFile();
+
+            foreach (var item in tokens)
+            {
+                if (item is TranslationToken translationToken)
+                {
+                    AddParagraph(document, translationToken.Content, translationToken.Original);
+                }
+                else
+                {
+                    //TODO: add processing for paragraph token
+                }
+
+            }
         }
 
         private WordprocessingDocument CreateFile()
@@ -45,7 +63,7 @@ namespace Translator.Core.Write.Docx
 
         private Paragraph AddParagraph(WordprocessingDocument file, string translation, string? original)
         {
-            var textElement = new Text(translation); 
+            var textElement = new Text(translation);
             var runElement = new Run(textElement);
 
             Paragraph paragraph = new Paragraph(runElement);
@@ -55,7 +73,8 @@ namespace Translator.Core.Write.Docx
                 var commentId = _commentId++.ToString();
 
                 var commentParagraph = new Paragraph(new Run(new Text(original)));
-                var comment = new Comment() {
+                var comment = new Comment()
+                {
                     Id = commentId,
                     Author = "Translator",
                     Initials = "T",
@@ -73,7 +92,7 @@ namespace Translator.Core.Write.Docx
             }
 
             file.MainDocumentPart!.Document.Body!.AppendChild(paragraph);
-            
+
             return paragraph;
         }
     }

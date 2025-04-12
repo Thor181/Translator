@@ -6,9 +6,10 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using Translator.Core.Models.Translate.Api.Google;
+using Translator.Core.Models.Utils;
+using Translator.Core.Parse.Tokens;
 
-namespace Translator.Core.Parse.Word
+namespace Translator.Core.Parse.Docx
 {
     public sealed class DocxParser : IParser, IDisposable
     {
@@ -19,13 +20,13 @@ namespace Translator.Core.Parse.Word
         public ParseMode Mode { get; set; } = ParseMode.Paragraphs;
         public required string Source { get; set; }
 
-        public string[] Parse()
+        public ReadOnlySpan<BaseToken> Parse()
         {
             OpenFile();
 
-            var texts = GetTextParagraphs();
+            var tokens = Tokenize();
 
-            return texts.ToArray();
+            return tokens;
         }
 
         private void OpenFile()
@@ -35,6 +36,25 @@ namespace Translator.Core.Parse.Word
 
             if (_documentBody == null)
                 throw new NullReferenceException("Document body must not be null");
+        }
+
+        private ReadOnlySpan<BaseToken> Tokenize()
+        {
+            var paragraphs = _documentBody.Elements<Paragraph>();
+            var tokens = new List<BaseToken>();
+
+            foreach (var paragraph in paragraphs)
+            {
+                var text = paragraph.Select(x => x.Descendants<Text>().Select(y => y.Text).JoinString()).JoinString();
+                ReadOnlySpan<string> sentences = SplitIntoSentences(text);
+
+                foreach (var sentence in sentences)
+                    tokens.Add(new SentenceToken(sentence));
+
+                tokens.Add(new ParagraphToken());
+            }
+            
+            return CollectionsMarshal.AsSpan(tokens);
         }
 
         private ReadOnlySpan<string> GetTextParagraphs()
