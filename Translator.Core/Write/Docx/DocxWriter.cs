@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Translator.Core.Models.Translate;
+using Translator.Core.Translate;
 
 namespace Translator.Core.Write.Docx
 {

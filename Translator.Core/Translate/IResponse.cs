@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Translator.Core.Models.Translate
+namespace Translator.Core.Translate
 {
     public interface IResponse
     {

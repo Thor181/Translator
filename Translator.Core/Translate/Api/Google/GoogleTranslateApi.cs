@@ -6,8 +6,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using Translator.Core.Common;
-using Translator.Core.Models.Translate;
-using Translator.Core.Models.Translate.Api.Google;
+using Translator.Core.Models.Utils;
 using Translator.Core.Translate.Languages;
 
 namespace Translator.Core.Translate.Api.Google
@@ -20,7 +19,7 @@ namespace Translator.Core.Translate.Api.Google
         public Language SourceLanguage { get; set; } = Language.Auto;
         public required Language TargetLanguage { get; set; }
 
-        public Result<GoogleResponse> Translate(string text)
+        public Result<IResponse> Translate(string text)
         {
             var escapedText = Uri.EscapeDataString(text);
 
@@ -36,10 +35,10 @@ namespace Translator.Core.Translate.Api.Google
             GoogleApiResponse? apiResponse = success ? response.Content.ReadFromJson<GoogleApiResponse>() : null;
             GoogleResponse? body = success && apiResponse != null ? new GoogleResponse(apiResponse) : null;
 
-            return new Result<GoogleResponse>(success, message, body);
+            return new Result<IResponse>(success, message, body);
         }
 
-        public IEnumerable<Result<GoogleResponse>> Translate(params IEnumerable<string> texts)
+        public IEnumerable<Result<IResponse>> Translate(params IEnumerable<string> texts)
         {
             var index = 0;
             foreach (var text in texts)

@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Translator.Core.Models.Translate.Api.Google
+namespace Translator.Core.Translate.Api.Google
 {
     public class GoogleResponse : IResponse
     {
