@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Translator.Core", "Translat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Translator.ConsoleApp", "Translator.ConsoleApp\Translator.ConsoleApp.csproj", "{84B5EBA5-CF17-40F7-967E-FAC28CE56CB6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Translator.WpfApp", "Translator.WpfApp\Translator.WpfApp.csproj", "{001484B7-2794-41FF-B4C3-27A7A5FA8813}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{84B5EBA5-CF17-40F7-967E-FAC28CE56CB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84B5EBA5-CF17-40F7-967E-FAC28CE56CB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84B5EBA5-CF17-40F7-967E-FAC28CE56CB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{001484B7-2794-41FF-B4C3-27A7A5FA8813}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{001484B7-2794-41FF-B4C3-27A7A5FA8813}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{001484B7-2794-41FF-B4C3-27A7A5FA8813}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{001484B7-2794-41FF-B4C3-27A7A5FA8813}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
